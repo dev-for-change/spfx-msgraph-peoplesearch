@@ -70,6 +70,7 @@ export default class PeopleSearchWebPart extends BaseClientSideWebPart<IPeopleSe
 
       this._searchService = update(this._searchService, {
         selectParameter: { $set: this.properties.selectParameter ? [...Array.from(new Set([...(this.properties.selectParameter.split(',')), ...['id', 'userPrincipalName', 'mail', 'displayName']]))] : [] },
+        selectFields: { $set: this.properties.selectParameter ? this.properties.selectParameter.split(',') : [] },
         filterParameter: { $set: this.properties.filterParameter },
         orderByParameter: { $set: this.properties.orderByParameter },
         searchParameter: { $set: searchParameter },

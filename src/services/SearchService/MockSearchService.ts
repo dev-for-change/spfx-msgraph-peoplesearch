@@ -14,6 +14,9 @@ export class MockSearchService implements ISearchService {
   
     public get selectParameter(): string[] { return this._selectParameter; }
     public set selectParameter(value: string[]) { this._selectParameter = value; }
+
+    public get selectFields(): string[] { return this._selectParameter; }
+    public set selectFields(value: string[]) { this._selectParameter = value; }
   
     public get filterParameter(): string { return this._filterParameter; }
     public set filterParameter(value: string) { this._filterParameter = value; }
@@ -57,6 +60,15 @@ export class MockSearchService implements ISearchService {
     public async fetchProfilePictures(users: ExtendedUser[]): Promise<IProfileImage> {
         return {};
      }
+
+    public async searchSkills(): Promise<PageCollection<Skill>> {
+        // Mock implementation for skills
+        return {
+            value: [],
+            hasNext: false,
+            totalCount: 0
+        };
+    }
 
     private getResultData(currentPage: string): PageCollection<ExtendedUser> {
         const resultData: PageCollection<ExtendedUser> = {

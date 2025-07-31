@@ -15,6 +15,9 @@ export class SharePointSearchService implements ISearchService {
   private _searchParameter: string;
   private _pageSize: number;
 
+  public get selectParameter(): string[] { return this._selectFields; }
+  public set selectParameter(value: string[]) { this._selectFields = value; }
+
   public get selectFields(): string[] { return this._selectFields; }
   public set selectFields(value: string[]) { this._selectFields = value; }
 
@@ -29,6 +32,9 @@ export class SharePointSearchService implements ISearchService {
 
   public get pageSize(): number { return this._pageSize; }
   public set pageSize(value: number) { this._pageSize = value; }
+
+  public get enableUmlautReplacement(): boolean { return false; }
+  public set enableUmlautReplacement(value: boolean) { /* Not used for SharePoint */ }
 
   constructor(spHttpClient: SPHttpClient, siteUrl: string, listName: string = "SkillsLibrary") {
     this._spHttpClient = spHttpClient;
@@ -203,5 +209,14 @@ export class SharePointSearchService implements ISearchService {
       console.error('Error fetching skills page from SharePoint:', error);
       throw error;
     }
+  }
+
+  // Implement methods for people search (not used but required by interface)
+  public async searchUsers(): Promise<PageCollection<ExtendedUser>> {
+    throw new Error("searchUsers not implemented for SharePoint service");
+  }
+
+  public async fetchProfilePictures(): Promise<IProfileImage> {
+    return {};
   }
 }

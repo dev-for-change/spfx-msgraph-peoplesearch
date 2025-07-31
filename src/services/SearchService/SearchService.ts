@@ -20,6 +20,9 @@ export class SearchService implements ISearchService {
   public get selectParameter(): string[] { return this._selectParameter; }
   public set selectParameter(value: string[]) { this._selectParameter = value; }
 
+  public get selectFields(): string[] { return this._selectParameter; }
+  public set selectFields(value: string[]) { this._selectParameter = value; }
+
   public get filterParameter(): string { return this._filterParameter; }
   public set filterParameter(value: string) { this._filterParameter = value; }
 
