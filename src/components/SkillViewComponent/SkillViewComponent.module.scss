@@ -1,0 +1,84 @@
+.skillView {
+
+    .defaultCard {
+        .skillCardContainer {
+            display: flex;
+            flex-flow: row wrap;
+            justify-content: left;
+            gap: 15px;
+        }
+
+        .skillCardItem {
+            flex: 0 0 300px;
+            min-height: 150px;
+
+            .skillCard {
+                padding: 15px;
+                border: 1px solid #e1e1e1;
+                border-radius: 4px;
+                background-color: white;
+                box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+                transition: box-shadow 0.2s ease-in-out;
+                height: 100%;
+                display: flex;
+                flex-direction: column;
+
+                &:hover {
+                    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+                }
+
+                .skillTitle {
+                    font-size: 16px;
+                    font-weight: 600;
+                    margin-bottom: 8px;
+                    color: #323130;
+                }
+
+                .skillDescription {
+                    font-size: 14px;
+                    color: #605e5c;
+                    margin-bottom: 12px;
+                    flex-grow: 1;
+                    line-height: 1.4;
+                }
+
+                .skillMeta {
+                    display: flex;
+                    flex-direction: column;
+                    gap: 4px;
+                    font-size: 12px;
+                    color: #8a8886;
+
+                    .skillCategory {
+                        font-weight: 500;
+                    }
+
+                    .skillLevel {
+                        color: #0078d4;
+                        font-weight: 500;
+                    }
+
+                    .skillAuthor {
+                        margin-top: 8px;
+                        padding-top: 8px;
+                        border-top: 1px solid #f3f2f1;
+                    }
+                }
+            }
+        }
+    }
+    
+    .resultCount {
+        padding-left: 10px;
+        margin-bottom: 15px;
+        font-size: 14px;
+        color: #605e5c;
+    }
+
+    .noResults {
+        padding: 20px;
+        text-align: center;
+        color: #605e5c;
+        font-size: 16px;
+    }
+}

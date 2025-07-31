@@ -22,6 +22,7 @@ import update from 'immutability-helper';
 import * as strings from "PeopleSearchWebPartStrings";
 import { IPeopleSearchWebPartProps } from "./IPeopleSearchWebPartProps";
 import { ISearchService, MockSearchService, SearchService } from "../../services/SearchService";
+import { SharePointSearchService } from "../../services/SearchService";
 import { IPeopleSearchContainerProps, PeopleSearchContainer } from "./components/PeopleSearchContainer";
 import ResultsLayoutOption from "../../models/ResultsLayoutOption";
 import { TemplateService } from "../../services/TemplateService/TemplateService";
@@ -133,7 +134,15 @@ export default class PeopleSearchWebPart extends BaseClientSideWebPart<IPeopleSe
     if (Environment.type in [EnvironmentType.Local, EnvironmentType.Test]) {
       this._searchService = new MockSearchService();
     } else {
-      this._searchService = new SearchService(this.context.msGraphClientFactory);
+      // Use SharePoint service for skills, Graph service for people
+      if (this.properties.selectedLayout === ResultsLayoutOption.Skills) {
+        this._searchService = new SharePointSearchService(
+          this.context.spHttpClient,
+          this.context.pageContext.web.absoluteUrl
+        );
+      } else {
+        this._searchService = new SearchService(this.context.msGraphClientFactory);
+      }
     }
 
     this._templateService = new TemplateService();
@@ -315,6 +324,13 @@ export default class PeopleSearchWebPart extends BaseClientSideWebPart<IPeopleSe
             },
             text: strings.PeopleLayoutOption,
             key: ResultsLayoutOption.People
+        },
+        {
+            iconProps: {
+                officeFabricIconFontName: 'Skills'
+            },
+            text: 'Skills',
+            key: ResultsLayoutOption.Skills
         },
         {
             iconProps: {

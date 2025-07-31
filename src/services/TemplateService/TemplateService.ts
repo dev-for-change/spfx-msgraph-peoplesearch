@@ -10,6 +10,8 @@ import ITemplateContext from '../../models/ITemplateContext';
 import { PeopleViewComponent, IPeopleViewProps } from '../../components/PeopleViewComponent/PeopleViewComponent';
 import { IPeopleShimmerViewProps, PeopleShimmerViewComponent } from '../../components/PeopleViewComponent/PeopleShimmerViewComponent';
 import { ExtendedUser } from '../../models/ExtendedUser';
+import { ISkillViewProps, SkillViewComponent } from '../../components/SkillViewComponent/SkillViewComponent';
+import { Skill } from '../../models/Skill';
 
 export interface IComponentFieldsConfiguration {
 
@@ -48,6 +50,8 @@ export class TemplateService {
         switch (layout) {
             case ResultsLayoutOption.People:
                 return this._getPeopleLayoutFields(properties);
+            case ResultsLayoutOption.Skills:
+                return this._getSkillsLayoutFields(properties);
             default:
                 return [];
         }
@@ -62,6 +66,14 @@ export class TemplateService {
                     {
                         templateContext: results
                     } as IPeopleViewProps
+                );
+                break;
+            case ResultsLayoutOption.Skills:
+                templateComponent = React.createElement(
+                    SkillViewComponent,
+                    {
+                        templateContext: results
+                    } as ISkillViewProps
                 );
                 break;
             case ResultsLayoutOption.Debug:
@@ -104,6 +116,23 @@ export class TemplateService {
         // Use configuration
         fieldsConfiguration.map(configuration => {
 
+            const processedValue = item[configuration.value];
+            processedProps[configuration.field] = processedValue;
+        });
+
+        return processedProps as T;
+    }
+
+    /**
+     * Replaces item field values with field mapping values configuration for Skills
+     * @param fieldsConfiguration the fields configuration
+     * @param item the skill item
+     */
+    public static processSkillFieldsConfiguration<T>(fieldsConfiguration: IComponentFieldsConfiguration[], item: Skill): T {
+        const processedProps = {};
+
+        // Use configuration
+        fieldsConfiguration.map(configuration => {
             const processedValue = item[configuration.value];
             processedProps[configuration.field] = processedValue;
         });
@@ -184,6 +213,52 @@ export class TemplateService {
                     }
                 ]
             }),      
+        ];
+    }
+
+    private _getSkillsLayoutFields(properties: IPeopleSearchWebPartProps): IPropertyPaneField<any>[] { // eslint-disable-line @typescript-eslint/no-explicit-any
+        
+        // Setup default values
+        if (!properties.templateParameters.skillFields) {
+            properties.templateParameters.skillFields = [
+                { name: 'Title', field: 'title', value: "Title", searchable: true },
+                { name: 'Description', field: 'description', value: "Description", searchable: true },
+                { name: 'Category', field: 'category', value: "Category", searchable: true },
+                { name: 'Level', field: 'level', value: "Level", searchable: false },
+                { name: 'Author', field: 'author', value: "Author.Title", searchable: false }
+            ] as IComponentFieldsConfiguration[];
+        }
+
+        return [
+            PropertyFieldCollectionData('templateParameters.skillFields', {
+                manageBtnLabel: 'Manage skill fields',
+                key: 'templateParameters.skillFields',
+                panelHeader: 'Manage skill fields',
+                panelDescription: 'Here you can map each field values with the corresponding skill placeholders.',
+                enableSorting: false,
+                disableItemCreation: true,
+                disableItemDeletion: true,
+                label: 'Manage skill fields',
+                value: properties.templateParameters.skillFields as IComponentFieldsConfiguration[],
+                fields: [
+                    {
+                        id: 'name',
+                        type: CustomCollectionFieldType.string,
+                        disableEdit: true,
+                        title: 'Name'
+                    },
+                    {
+                        id: 'value',
+                        type: CustomCollectionFieldType.string,
+                        title: 'Value'
+                    },
+                    {
+                        id: 'searchable',
+                        type: CustomCollectionFieldType.boolean,
+                        title: 'Searchable'
+                    }
+                ]
+            })
         ];
     }
 }

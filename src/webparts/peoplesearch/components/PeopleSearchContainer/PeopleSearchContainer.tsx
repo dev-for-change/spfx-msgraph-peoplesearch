@@ -24,6 +24,7 @@ import ITemplateContext from "../../../../models/ITemplateContext";
 import { PeopleSearchBox } from "../PeopleSearchBox";
 import SearchParameterOption from "../../../../models/SearchParameterOption";
 import { ExtendedUser } from "../../../../models/ExtendedUser";
+import { Skill } from "../../../../models/Skill";
 
 export class PeopleSearchContainer extends React.Component<IPeopleSearchContainerProps,IPeopleSearchContainerState> {
 
@@ -228,20 +229,29 @@ export class PeopleSearchContainer extends React.Component<IPeopleSearchContaine
           searchParameter: localSearchParameter
         });
 
-        const searchResults = await this.props.searchService.searchUsers(this.props.templateParameters);
+        let searchResults;
+        if (this.props.selectedLayout === ResultsLayoutOption.Skills) {
+          searchResults = await (this.props.searchService as any).searchSkills(this.props.templateParameters);
+        } else {
+          searchResults = await (this.props.searchService as any).searchUsers(this.props.templateParameters);
+        }
 
         this.setState(prevState => {
           if (prevState.searchParameter === localSearchParameter)
           {
             return {
               results: [searchResults],
-              resultCount: searchResults["@odata.count"],
+              resultCount: searchResults["@odata.count"] || searchResults.totalCount || searchResults.value.length,
               areResultsLoading: false,
               page: 1
             };
           }
           return null;
-        }, () => this._fetchPeopleProfilePictures(1));
+        }, () => {
+          if (this.props.selectedLayout !== ResultsLayoutOption.Skills) {
+            this._fetchPeopleProfilePictures(1);
+          }
+        });
       } else if (this.state.results.length === (page - 1)) {
         if (this.hasNextPage()) {
           this.setState({
@@ -249,13 +259,24 @@ export class PeopleSearchContainer extends React.Component<IPeopleSearchContaine
             hasError: false,
             errorMessage: ""
           });
-          const nextLink = this.state.results[this.state.results.length - 1]["@odata.nextLink"];
-          const searchResults = await this.props.searchService.fetchPage(nextLink);
+          
+          let searchResults;
+          if (this.props.selectedLayout === ResultsLayoutOption.Skills) {
+            searchResults = await this.props.searchService.fetchPage(page);
+          } else {
+            const nextLink = this.state.results[this.state.results.length - 1]["@odata.nextLink"];
+            searchResults = await (this.props.searchService as any).fetchPage(nextLink);
+          }
+          
           this.setState(prevState => ({
             results: [...prevState.results, searchResults],
             areResultsLoading: false,
             page: page
-          }), () => this._fetchPeopleProfilePictures(page));
+          }), () => {
+            if (this.props.selectedLayout !== ResultsLayoutOption.Skills) {
+              this._fetchPeopleProfilePictures(page);
+            }
+          });
         }
       } else {
         this.setState({

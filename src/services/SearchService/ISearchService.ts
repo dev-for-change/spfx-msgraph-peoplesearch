@@ -1,18 +1,15 @@
-import { ExtendedUser } from '../../models/ExtendedUser';
-import { IProfileImage } from '../../models/IProfileImage';
+import { Skill } from '../../models/Skill';
 import { PageCollection } from '../../models/PageCollection';
 import { IComponentFieldsConfiguration } from '../TemplateService/TemplateService';
 
 export interface ISearchService {
-    selectParameter: string[];
+    selectFields: string[];
     filterParameter: string;
     orderByParameter: string;
     searchParameter: string;
-    enableUmlautReplacement: boolean;
     pageSize: number;
-    searchUsers(templateParameters: {
+    searchSkills(templateParameters: {
       [key: string]: IComponentFieldsConfiguration[] | number;
-    }): Promise<PageCollection<ExtendedUser>>;
-    fetchPage(pageLink: string): Promise<PageCollection<ExtendedUser>>;
-    fetchProfilePictures(users: ExtendedUser[]): Promise<IProfileImage>;
+    }): Promise<PageCollection<Skill>>;
+    fetchPage(pageNumber: number): Promise<PageCollection<Skill>>;
 }

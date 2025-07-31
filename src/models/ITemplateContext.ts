@@ -2,19 +2,19 @@ import { PageCollection } from './PageCollection';
 import { IComponentFieldsConfiguration } from '../services/TemplateService/TemplateService';
 import { IReadonlyTheme } from '@microsoft/sp-component-base';
 import { ServiceScope } from '@microsoft/sp-core-library';
-import { ExtendedUser } from './ExtendedUser';
+import { Skill } from './Skill';
 
 interface ITemplateContext {
-    items: PageCollection<ExtendedUser>;
+    items: PageCollection<Skill>;
     resultCount: number;
     showResultsCount: boolean;
     showBlank: boolean;
     showPagination: boolean;
     showLPC: boolean;
-    peopleFields?: IComponentFieldsConfiguration[];
+    skillFields?: IComponentFieldsConfiguration[];
     themeVariant?: IReadonlyTheme;
     serviceScope: ServiceScope;
-    [key:string]: IComponentFieldsConfiguration[] | number | boolean | PageCollection<ExtendedUser> | IReadonlyTheme | ServiceScope;
+    [key:string]: IComponentFieldsConfiguration[] | number | boolean | PageCollection<Skill> | IReadonlyTheme | ServiceScope;
 }
 
 export default ITemplateContext;
